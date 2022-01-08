@@ -5,10 +5,15 @@ Created on Sat Jan  8 10:59:28 2022
 @author: anirudh
 """
 import numpy as np
+
 import time
 import cv2
 import os
+
+
+
 import io
+
 from PIL import Image
 
 
@@ -44,7 +49,7 @@ def load_model(configpath,weightspath):
 
 
 
-def get_predection(image,net,LABELS,COLORS):
+def get_predection(image,net,LABELS):
     (H, W) = image.shape[:2]
 
     ln = net.getLayerNames()
@@ -60,7 +65,7 @@ def get_predection(image,net,LABELS,COLORS):
     end = time.time()
 
     # show timing information on YOLO
-    print("time for yolo".format(end - start))
+    print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
     # initialize our lists of detected bounding boxes, confidences, and
     # class IDs, respectively
@@ -75,12 +80,18 @@ def get_predection(image,net,LABELS,COLORS):
             # extract the class ID and confidence (i.e., probability) of
             # the current object detection
             scores = detection[5:]
-
+            # print(scores)
             classID = np.argmax(scores)
-
+            # print(classID)
             confidence = scores[classID]
 
+            # filter out weak predictions by ensuring the detected
+            # probability is greater than the minimum probability
             if confidence > confthres:
+                # scale the bounding box coordinates back relative to the
+                # size of the image, keeping in mind that YOLO actually
+                # returns the center (x, y)-coordinates of the bounding
+                # box followed by the boxes' width and height
                 box = detection[0:4] * np.array([W, H, W, H])
                 (centerX, centerY, width, height) = box.astype("int")
 
@@ -102,12 +113,13 @@ def get_predection(image,net,LABELS,COLORS):
 
     # ensure at least one detection exists
     if len(idxs) > 0:
+        # loop over the indexes we are keeping
         for i in idxs.flatten():
             # extract the bounding box coordinates
             (x, y) = (boxes[i][0], boxes[i][1])
             (w, h) = (boxes[i][2], boxes[i][3])
             
-            c_i = image[y:y+h , x:x+w]
+            c_i = image[y:y+h , x:x+w]               
             cv2.imwrite(LABELS[classIDs[i]]+'.jpg',c_i)
 
 
@@ -122,11 +134,11 @@ nets=load_model(CFG,Weights)
 
 
 def main():
-    image = cv2.imread("./14.jpg")
+    image = cv2.imread("./z.jpg")
     npimg=np.array(image)
     image=npimg.copy()
     image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
-    get_predection(image,nets,Lables,Colors)
+    get_predection(image,nets,Lables)
     
     
 if __name__ == '__main__':
