@@ -9,21 +9,27 @@ import numpy as np
 import time
 import cv2
 import os
-
-
-
 import io
-
 from PIL import Image
+import pytesseract
+from pytesseract import Output
 
 
 confthres = 0.3
 nmsthres = 0.1
 yolo_path = './'
+path = r'results'
+path2w = r'results\results.txt'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract' #replace with where its installed for you XD
+a=[]
 
 
 
-
+def run_ocr_custom():
+    for fn in os.listdir(path) :
+        if fn.endswith('.jpg') and fn != 'TABLE.jpg':           
+            x = pytesseract.image_to_string(Image.open(os.path.join(path,fn)),lang='eng')
+            a.append(fn[0:len(fn)-3]+':'+x)
 
 
 def get_labels(labels_path):
@@ -67,63 +73,55 @@ def get_predection(image,net,LABELS):
     # show timing information on YOLO
     print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
-    # initialize our lists of detected bounding boxes, confidences, and
-    # class IDs, respectively
+    
     boxes = []
     confidences = []
     classIDs = []
 
-    # loop over each of the layer outputs
+
     for output in layerOutputs:
-        # loop over each of the detections
+ 
         for detection in output:
-            # extract the class ID and confidence (i.e., probability) of
-            # the current object detection
+            
             scores = detection[5:]
-            # print(scores)
+            
             classID = np.argmax(scores)
-            # print(classID)
+          
             confidence = scores[classID]
 
-            # filter out weak predictions by ensuring the detected
-            # probability is greater than the minimum probability
+            
             if confidence > confthres:
-                # scale the bounding box coordinates back relative to the
-                # size of the image, keeping in mind that YOLO actually
-                # returns the center (x, y)-coordinates of the bounding
-                # box followed by the boxes' width and height
+                #
                 box = detection[0:4] * np.array([W, H, W, H])
                 (centerX, centerY, width, height) = box.astype("int")
 
-                # use the center (x, y)-coordinates to derive the top and
-                # and left corner of the bounding box
+                
                 x = int(centerX - (width / 2))
                 y = int(centerY - (height / 2))
 
-                # update our list of bounding box coordinates, confidences,
-                # and class IDs
+                
                 boxes.append([x, y, int(width), int(height)])
                 confidences.append(float(confidence))
                 classIDs.append(classID)
 
-    # apply non-maxima suppression to suppress weak, overlapping bounding
-    # boxes
+    
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, confthres,
                             nmsthres)
 
-    # ensure at least one detection exists
+    
     if len(idxs) > 0:
         # loop over the indexes we are keeping
         for i in idxs.flatten():
             # extract the bounding box coordinates
             (x, y) = (boxes[i][0], boxes[i][1])
             (w, h) = (boxes[i][2], boxes[i][3])
-            
             c_i = image[y:y+h , x:x+w]               
-            cv2.imwrite(LABELS[classIDs[i]]+'.jpg',c_i)
+            cv2.imwrite(os.path.join(path,LABELS[classIDs[i]]+'.jpg'),c_i)
 
 
 
+        
+                 
 labelsPath="yolo/classes.names"
 cfgpath="yolo/yolov3_custom.cfg"
 wpath="yolo/yolov3_custom_last.weights"
@@ -134,12 +132,17 @@ nets=load_model(CFG,Weights)
 
 
 def main():
-    image = cv2.imread("./z.jpg")
+    image = cv2.imread("./13.jpg")
     npimg=np.array(image)
     image=npimg.copy()
     image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
     get_predection(image,nets,Lables)
+    run_ocr_custom()
+    f_1 = open(path2w,'w')
+    for x in a:
+        f_1.writelines(x+'\n')
     
-    
+
+        
 if __name__ == '__main__':
     main()
