@@ -1,0 +1,29 @@
+ABN.:ABN 59 547 297 213
+
+COMPANY.:== Microsoft
+
+GST.:GST: 3520
+
+INVOICE DATE.:Invoice Date: 11/09/2020
+
+TABLE.:Order Details Billing Summary
+
+Product: Online Services
+
+Customer PO Number:
+
+Order Number: 46e3d82a-c834-4de9-9acf-a0c3f31f4935
+Billing Period: 11/08/2020 - 10/09/2020
+
+Payment Terms: Net 30
+
+Due Date: 11/10/2020
+
+Charges: 258.00
+Discounts: 0.00
+Credits: 0.00
+GST: 25.80
+Total: 283.80
+
+TOTAL.:283.80 AUD
+
