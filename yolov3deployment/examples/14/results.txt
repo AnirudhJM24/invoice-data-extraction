@@ -1,0 +1,10 @@
+ABN.:ABN 59 547 297 213
+
+COMPANY.:== Microsoft
+
+GST.:GST: 3520
+
+INVOICE DATE.:Invoice Date: 11/09/2020
+
+TOTAL.:283.80 AUD
+
