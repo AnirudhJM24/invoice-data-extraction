@@ -5,7 +5,16 @@ pip3 install pipreqs
 
 python3 -m  pipreqs.pipreqs .
 
-# Set path for pytesseract
- Set pytesseract.pytesseract.tesseract_cmd = '' to where it is installed on your device
+# Installing pytesseract
+
+Download tesseract from python via this link https://pypi.python.org/pypi/pytesseract
+
+Unizip the file.
+
+Go to the directory which contains the unizip file
+
+Run this command " python setup.py install "
+
+Set     pytesseract.pytesseract.tesseract_cmd = '  '   to where it is installed on your device
 
 
