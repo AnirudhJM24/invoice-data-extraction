@@ -1,6 +1,8 @@
 # Run the following commands in the directory
 
 pip3 install pipreqs
+
+
 python3 -m  pipreqs.pipreqs .
 
 # Set path for pytesseract
