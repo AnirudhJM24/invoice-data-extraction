@@ -246,7 +246,7 @@ def get_predection(image,net,LABELS,path):
             # extract the bounding box coordinates
             (x, y) = (boxes[i][0], boxes[i][1])
             (w, h) = (boxes[i][2], boxes[i][3])
-            c_i = image[y:y+h , x:x+w]               
+            c_i = image[1.1*(y:y+h) , (1.1)*x:x+w]               
             cv2.imwrite(os.path.join(path,LABELS[classIDs[i]]+'.jpg'),c_i)
 
 
