@@ -25,5 +25,9 @@ invoice = 'examples/sample2_invoice1.jpg'  # path to image
 img_supp_types = '.jpg'
 if invoice.endswith(img_supp_types):
     predict(invoice)
+elif invoice.endswith('pdf'):
+    images = convert_from_path(invoice)
+    for i in enumerate(images):
+        predict(i)
 
 
