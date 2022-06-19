@@ -22,7 +22,7 @@ def predict(image):
 
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='weights/best.pt')
 invoice = 'examples/sample2_invoice1.jpg'  # path to image
-img_supp_types = '.jpg'
+img_supp_types = '.jpg' or '.png'
 if invoice.endswith(img_supp_types):
     predict(invoice)
 elif invoice.endswith('pdf'):
