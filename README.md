@@ -25,6 +25,7 @@ $ pip install -r requirements.txt
 
 3. Add the invoice to examples subfolder.
 4. Open model.py file and in Line 20, update the file name which was added.
+5. Run model.py.
 
 
 

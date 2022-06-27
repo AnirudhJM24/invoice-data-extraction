@@ -9,7 +9,7 @@ import pytesseract
 from PIL import Image
 
 
-
+poppler_path = r'poppler-22.04.0\Library\bin'
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 with open('results.txt','w') as f:
@@ -17,19 +17,21 @@ with open('results.txt','w') as f:
 
 save_dir = 'runs/detect'
 
-invoice_path = 'examples\\treebo.jpg'
+invoice_path = r'examples\airtel_june_2012.pdf'
 invoice_name  = invoice_path.split('\\')[-1]
 
-company_dir = os.path.join('runs\detect\exp\crops\COMPANY', invoice_name)
-invoice_date_dir = os.path.join('runs\detect\exp\crops\INVOICE DATE' , invoice_name)
-table_dir = os.path.join('runs\detect\exp\crops\TABLE', invoice_name)
-total_dir = os.path.join('runs\detect\exp\crops\TOTAL' , invoice_name)
-gst_dir = os.path.join('runs\detect\exp\crops\GST' , invoice_name)
-abn_dir = os.path.join('runs\detect\exp\crops\ABN' , invoice_name)
-account_dir = os.path.join('runs\detect\exp\crops\ACCOUNT_DETAILS' , invoice_name)
+def set_dir(invoice_name):
 
-crop_img_paths = [{'field' : 'company', 'path' :company_dir} , {'field' : 'invoice date', 'path' : invoice_date_dir} , {'field' : 'Total', 'path' :total_dir}, {'field' : 'gst', 'path' :gst_dir}, {'field' : 'abn', 'path' :abn_dir},{'field' : 'Account Details', 'path' :account_dir}]
+    company_dir = os.path.join('runs\detect\exp\crops\COMPANY', invoice_name)
+    invoice_date_dir = os.path.join('runs\detect\exp\crops\INVOICE DATE' , invoice_name)
+    table_dir = os.path.join('runs\detect\exp\crops\TABLE', invoice_name)
+    total_dir = os.path.join('runs\detect\exp\crops\TOTAL' , invoice_name)
+    gst_dir = os.path.join('runs\detect\exp\crops\GST' , invoice_name)
+    abn_dir = os.path.join('runs\detect\exp\crops\ABN' , invoice_name)
+    account_dir = os.path.join('runs\detect\exp\crops\ACCOUNT_DETAILS' , invoice_name)
 
+    crop_img_paths = [{'field' : 'company', 'path' :company_dir} , {'field' : 'invoice date', 'path' : invoice_date_dir} , {'field' : 'Total', 'path' :total_dir}, {'field' : 'gst', 'path' :gst_dir}, {'field' : 'abn', 'path' :abn_dir},{'field' : 'Account Details', 'path' :account_dir}]
+    return crop_img_paths, table_dir
 # os.chmod(save_dir, 0o777)
 
 def clear_directory(save_dir):
@@ -56,28 +58,35 @@ def retrieve_text(field_name, image_path):
 def main():
     clear_directory(save_dir)
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='weights/best.pt')
-    invoice = 'examples\sample2_invoice3.jpg'  # path to image
+    invoice = invoice_path  # path to image
     img_supp_types = '.jpg' or '.png'
     if invoice.endswith(img_supp_types):
         predict(model, invoice)
+        crop_img_paths, table_dir = set_dir(invoice)
+        for img in crop_img_paths:
+            retrieve_text(img['field'],img['path'])
+        print('TABLE DETAILS:')
+        table_path = table_dir
+        os.system('python table-extraction\\table_transformer.py --table-type borderless -i ' + table_path)
+        print(crop_img_paths, table_dir)
     elif invoice.endswith('pdf'):
-        images = convert_from_path(invoice)
-        for i in enumerate(images):
+        images = convert_from_path(invoice,poppler_path=poppler_path)
+        print(images)
+        for i,imag in enumerate(images):
             clear_directory(save_dir)
-            predict(i)
+            img_name = imag
+            print(str(img_name))
+            predict(model, imag)
             for img in crop_img_paths:
                 retrieve_text(img['field'],img['path'])
-                print('TABLE DETAILS:')
-                table_path = table_dir
-                os.system('python table-extraction\\table_transformer.py --table-type borderless -i ' + table_path)
+            print('TABLE DETAILS:')
+            
+            table_path = os.path.join(os.path.dirname(table_dir),img_name)
+            os.system('python table-extraction\\table_transformer.py --table-type borderless -i ' + table_path)
                 
 
     
-    for img in crop_img_paths:
-        retrieve_text(img['field'],img['path'])
-    print('TABLE DETAILS:')
-    table_path = table_dir
-    os.system('python table-extraction\\table_transformer.py --table-type borderless -i ' + table_path)
+    
 
 
 if __name__ == "__main__":
