@@ -10,7 +10,7 @@ $ python -m pip install virtualenv
 ```
 
 ## Installing Tessaract OCR:
-Install the latest version of (tessaract OCR)[https://github.com/UB-Mannheim/tesseract/wiki] into the C directory and add the path (C:\Program Files (x86)\Tesseract-OCR) to both System and User environment variables in Windows.
+Install the latest version of (tessaract OCR)[https://github.com/UB-Mannheim/tesseract/wiki] into the C directory and add the path (C:\Program Files \Tesseract-OCR) to both System and User environment variables in Windows. Download the additional eng_layer.traineddata file and add it to C:\Program Files\Tesseract-OCR\tessdata
 
 ## Running the Code.
 1. Clone the repository or downlaod the zip file from GitHub
