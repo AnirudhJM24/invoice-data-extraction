@@ -17,10 +17,11 @@ with open('results.txt','w') as f:
 
 save_dir = 'runs/detect'
 
-invoice_path = r'examples\airtel_june_2012.pdf'
-invoice_name  = invoice_path.split('\\')[-1]
 
-def set_dir(invoice_name):
+
+
+def set_dir(invoice_path):
+    invoice_name  = invoice_path.split('\\')[-1]
 
     company_dir = os.path.join('runs\detect\exp\crops\COMPANY', invoice_name)
     invoice_date_dir = os.path.join('runs\detect\exp\crops\INVOICE DATE' , invoice_name)
@@ -45,25 +46,30 @@ def predict(model, image):
     #print(results.pandas().xyxy[0])
 
 def retrieve_text(field_name, image_path):
+    print(field_name,image_path)
     try:
         img = Image.open(image_path)
-        img_text = pytesseract.image_to_string(img,lang=eng_layer)
+        img_text = pytesseract.image_to_string(img,lang='eng_layer')
         print(field_name + ':' + img_text)
         with open('results.txt','a') as f:
             f.writelines(field_name + ':' + img_text)
             f.close()
-    except:
+    except Exception as e:
+        #print(e)
         print(field_name + ' not found')
 
 def main():
     clear_directory(save_dir)
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='weights/best.pt')
-    invoice = invoice_path  # path to image
+    invoice_path = r'examples\sample2_invoice2.jpg'
+    invoice = invoice_path
+      # path to image
     img_supp_types = '.jpg' or '.png'
     if invoice.endswith(img_supp_types):
-        predict(model, invoice)
+        predict(model, invoice_path)
         crop_img_paths, table_dir = set_dir(invoice)
         for img in crop_img_paths:
+            print(img)
             retrieve_text(img['field'],img['path'])
         print('TABLE DETAILS:')
         table_path = table_dir
@@ -83,7 +89,7 @@ def main():
             imag_name = imag.name
             print(str(imag_name))
             predict(model, imag_path)
-            crop_img_paths, table_dir = set_dir(invoice)
+            crop_img_paths, table_dir = set_dir(imag_path)
             for img in crop_img_paths:
                 retrieve_text(img['field'],img['path'])
             print('TABLE DETAILS:')
