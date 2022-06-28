@@ -15,17 +15,25 @@ Install the latest version of (tessaract OCR)[https://github.com/UB-Mannheim/tes
 ## Running the Code.
 1. Clone the repository or downlaod the zip file from GitHub
 ```
-$ git clone https://github.com/abhayhk2001/invoice-data-extraction
+ git clone https://github.com/abhayhk2001/invoice-data-extraction
 ```
 
 2. Open a Terminal window in the same folder as the downloaded code.
 ```
-$ pip install -r requirements.txt
+ pip install -r requirements.txt
 ```
 
 3. Add the invoice to examples subfolder.
-4. Open model.py file and in Line 20, update the file name which was added.
-5. Run model.py.
 
+4. 
+```
+ python model.py --file [filename relative path]
+```
+5. Example
+
+```
+ python model.py --file examples\airtel_june_2012.pdf
+```
+6. Results are stored in results.txt and table.csv
 
 

@@ -7,7 +7,12 @@ import shutil
 import sys
 import pytesseract
 from PIL import Image
+import argparse
 
+
+parser = argparse.ArgumentParser(description='run invoice detection')
+parser.add_argument('--file',help = 'enter path of invoice')
+args = parser.parse_args()
 
 poppler_path = r'poppler-22.04.0\Library\bin'
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -61,7 +66,7 @@ def retrieve_text(field_name, image_path):
 def main():
     clear_directory(save_dir)
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='weights/best.pt')
-    invoice_path = r'examples\sample2_invoice2.jpg'
+    invoice_path = args.file
     invoice = invoice_path
       # path to image
     img_supp_types = '.jpg' or '.png'
