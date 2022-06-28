@@ -47,7 +47,7 @@ def predict(model, image):
 def retrieve_text(field_name, image_path):
     try:
         img = Image.open(image_path)
-        img_text = pytesseract.image_to_string(img)
+        img_text = pytesseract.image_to_string(img,lang=eng_layer)
         print(field_name + ':' + img_text)
         with open('results.txt','a') as f:
             f.writelines(field_name + ':' + img_text)
