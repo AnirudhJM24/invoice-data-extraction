@@ -74,12 +74,12 @@ def main():
         predict(model, invoice_path)
         crop_img_paths, table_dir = set_dir(invoice)
         for img in crop_img_paths:
-            print(img)
+            #print(img)
             retrieve_text(img['field'],img['path'])
         print('TABLE DETAILS:')
         table_path = table_dir
         os.system('python table-extraction\\table_transformer.py --table-type borderless -i ' + table_path)
-        print(crop_img_paths, table_dir)
+        #print(crop_img_paths, table_dir)
     elif invoice.endswith('.pdf'):
         path_split = os.path.split(invoice)
         temp_fol = os.path.join(path_split[0],'temp')
@@ -87,12 +87,12 @@ def main():
         shutil.rmtree(temp_fol)
         os.makedirs(exp_fol)
         images = convert_from_path(invoice,500,exp_fol,fmt='jpeg',poppler_path=poppler_path)
-        print(images)
+        #print(images)
         for imag in os.scandir(exp_fol):
             clear_directory(save_dir)
             imag_path = imag.path
             imag_name = imag.name
-            print(str(imag_name))
+            #print(str(imag_name))
             predict(model, imag_path)
             crop_img_paths, table_dir = set_dir(imag_path)
             for img in crop_img_paths:
