@@ -51,7 +51,7 @@ def predict(model, image):
     #print(results.pandas().xyxy[0])
 
 def retrieve_text(field_name, image_path):
-    print(field_name,image_path)
+    #print(field_name,image_path)
     try:
         img = Image.open(image_path)
         img_text = pytesseract.image_to_string(img,lang='eng_layer')
@@ -100,7 +100,7 @@ def main():
             print('TABLE DETAILS:')
             
             table_path = imag_path
-            os.system('python table-extraction\\table_transformer.py --table-type borderless -i ' + table_path)
+            os.system('python table-extraction\\table_transformer.py --table-type bordered -i ' + table_path)
 
                 
 

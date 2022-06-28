@@ -1,3 +1,4 @@
-company:&: Iu =]
-Total:Total Q 2,30,705.34
-Total:-400170.88
+company:ABC LOGISTICS
+invoice date:Invoice Date
+April 8, 2013
+Total:Beja 950.00
