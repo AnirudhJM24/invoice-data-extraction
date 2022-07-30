@@ -1,4 +1,0 @@
-company:ABC LOGISTICS
-invoice date:Invoice Date
-April 8, 2013
-Total:Beja 950.00
