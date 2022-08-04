@@ -9,12 +9,14 @@ import pytesseract
 from PIL import Image
 import argparse
 
+from preprocess import preimgpdf
+
 
 parser = argparse.ArgumentParser(description='run invoice detection')
 parser.add_argument('--file',help = 'enter path of invoice')
 args = parser.parse_args()
 
-poppler_path = r'poppler-22.04.0\Library\bin'
+poppler_path = r'poppler-22.04.0/Library/bin'
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 with open('results.txt','w') as f:
@@ -28,17 +30,17 @@ save_dir = 'runs/detect'
 def set_dir(invoice_path):
     invoice_name  = invoice_path.split('\\')[-1]
 
-    company_dir = os.path.join('runs\detect\exp\crops\COMPANY', invoice_name)
-    invoice_date_dir = os.path.join('runs\detect\exp\crops\INVOICE DATE' , invoice_name)
-    table_dir = os.path.join('runs\detect\exp\crops\TABLE', invoice_name)
-    total_dir = os.path.join('runs\detect\exp\crops\TOTAL' , invoice_name)
-    gst_dir = os.path.join('runs\detect\exp\crops\GST' , invoice_name)
-    abn_dir = os.path.join('runs\detect\exp\crops\ABN' , invoice_name)
-    account_dir = os.path.join('runs\detect\exp\crops\ACCOUNT_DETAILS' , invoice_name)
+    company_dir = os.path.join('runs/detect/exp/crops/COMPANY', invoice_name)
+    invoice_date_dir = os.path.join('runs/detect/exp/crops/INVOICE DATE' , invoice_name)
+    table_dir = os.path.join('runs/detect/exp/crops/TABLE', invoice_name)
+    total_dir = os.path.join('runs/detect/exp/crops/TOTAL' , invoice_name)
+    gst_dir = os.path.join('runs/detect/exp/crops/GST' , invoice_name)
+    abn_dir = os.path.join('runs/detect/exp/crops/ABN' , invoice_name)
+    account_dir = os.path.join('runs/detect/exp/crops/ACCOUNT_DETAILS' , invoice_name)
 
     crop_img_paths = [{'field' : 'company', 'path' :company_dir} , {'field' : 'invoice date', 'path' : invoice_date_dir} , {'field' : 'Total', 'path' :total_dir}, {'field' : 'gst', 'path' :gst_dir}, {'field' : 'abn', 'path' :abn_dir},{'field' : 'Account Details', 'path' :account_dir}]
     return crop_img_paths, table_dir
-# os.chmod(save_dir, 0o777)
+os.chmod(save_dir, 0o777)
 
 def clear_directory(save_dir):
     for f in os.listdir(save_dir):

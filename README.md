@@ -27,12 +27,12 @@ Install the latest version of (tessaract OCR)[https://github.com/UB-Mannheim/tes
 
 4. 
 ```
- python model.py --file [filename relative path]
+ python main.py --file [filename relative path]
 ```
 5. Example
 
 ```
- python model.py --file examples\airtel_june_2012.pdf
+ python main.py --file examples\airtel_june_2012.pdf
 ```
 6. Results are stored in results.txt and table.csv
 

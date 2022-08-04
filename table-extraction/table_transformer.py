@@ -4,6 +4,7 @@ from domain.table_analysis.bordered_table_processor import BorderedTableProcesso
 from domain.table_analysis.borderless_table_processor import BorderlessTableProcessor
 import pandas as pd
 import pytesseract
+import os
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -32,6 +33,7 @@ def parse_args():
 
 if __name__ == "__main__":
     table_type, image_path = parse_args()
+    i=os.path.split(image_path)[1].split('.')[0]
     table_processor = None
     if table_type == "bordered":
         table_processor = BorderedTableProcessor()
@@ -47,4 +49,4 @@ if __name__ == "__main__":
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):
         print(table)
         print(table.shape)
-        table.to_csv('table.csv',index = False)
+        table.to_csv(os.path.join('ocr_results','table_'+table_type+'_'+i+'.csv'),index = False)
