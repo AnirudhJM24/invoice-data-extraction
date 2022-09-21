@@ -21,11 +21,12 @@ class TableProcessor(ABC):
         tesseract_image = cv2.cvtColor(thresholded_image, cv2.COLOR_BGR2RGB)
 
         OCR_TEXT_CONFIDENCE_THRESHOLD = 0.4
-        OCR_CONFIG_PSM_LEVEL = 3
+        OCR_CONFIG_PSM_LEVEL = 6
         boxes = pytesseract.image_to_data(
             tesseract_image, 
+            lang='eng_layer',
             output_type=pytesseract.Output.DICT,
-            config=f"--psm {OCR_CONFIG_PSM_LEVEL}"
+            config=f'--psm {OCR_CONFIG_PSM_LEVEL} --tessdata-dir "./tessdata"'
         )
         boxes = pd.DataFrame.from_dict(boxes)
         boxes["conf"] = boxes["conf"].apply(lambda x: int(float(x)))

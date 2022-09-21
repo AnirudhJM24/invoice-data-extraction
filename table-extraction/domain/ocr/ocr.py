@@ -31,7 +31,7 @@ def get_text(image, x1, y1, x2, y2, counter):
     roi = image[y1:y2, x1:x2]
     cv2.imwrite("roi.png", roi)
     cv2.imwrite("roi_" + str(counter) + ".png", roi)
-    return pytesseract.image_to_string("roi.png", config="--psm 6 --oem 1")
+    return pytesseract.image_to_string("roi.png", config="--psm 4 --oem 1")
 
 def add_rectangle(image, x1, y1, x2, y2):
     component = lambda: random.randint(0,255)
